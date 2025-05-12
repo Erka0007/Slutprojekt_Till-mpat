@@ -1,3 +1,8 @@
+# File: tillampad_spel.rb
+# Author: Erik Karlen
+# Date: 2025-05-12
+# Description: Ett spel där man ska skydda en borg från inkommande fiender genom att skjuta olika typer av kanonkulor på fienderna
+
 require 'ruby2d'
 #Definerar variabler
 window_x = 800 
@@ -6,7 +11,7 @@ window_y = 500
 set width: window_x, height: window_y
 
 #Beskrivning: Ritar upp spelets bakgrund
-#Variabler: none
+#parameter: void
 class Background_draw
   def initialize
   end
@@ -67,7 +72,7 @@ class Background_draw
 end
 
 #Beskrivning: Ritar upp spelets slutskärm och dödsmedelande
-#Variabler:
+#parameter:
 #wave - int : represeterar vilken nivå spelarar är på
 class DeadBackground_draw
   attr_accessor :wave
@@ -112,65 +117,66 @@ class DeadBackground_draw
       color: 'gray',
       z: 20
     ) 
-  Rectangle.new(
-    x: 120, y: 425,
-    width: 15, height: 15,
-    color: 'gray',
-    z: 20
-    ) 
-  Rectangle.new(
-    x: 95, y: 430,
-    width: 10, height: 10,
-    color: 'gray',
-    z: 20
-  ) 
-      Rectangle.new(
-        x: 50, y: 430,
-        width: 10, height: 10,
-        color: 'gray',
-        z: 20
-        ) 
     Rectangle.new(
-    x: 105, y: 420,
-    width: 20, height: 20,
-    color: 'gray',
-    z: 20
+      x: 120, y: 425,
+      width: 15, height: 15,
+      color: 'gray',
+      z: 20
+    ) 
+    Rectangle.new(
+      x: 95, y: 430,
+      width: 10, height: 10,
+      color: 'gray',
+      z: 20
+    ) 
+    Rectangle.new(
+      x: 50, y: 430,
+      width: 10, height: 10,
+      color: 'gray',
+      z: 20
+    ) 
+    Rectangle.new(
+      x: 105, y: 420,
+      width: 20, height: 20,
+      color: 'gray',
+      z: 20
     ) 
 
-  Rectangle.new(
-  x: 0, y: 0,
-  width: 800, height: 500,
-  color: 'blue',
-  z: -20
-  )
+    Rectangle.new(
+      x: 0, y: 0,
+      width: 800, height: 500,
+      color: 'blue',
+      z: -20
+    )
 
-  Circle.new(
-    x:120 , y: 430,
-    radius: 10,
-    sectors: 8,
-    color: 'black',
-    z: 10
-  )
-  Text.new(
-    "You lost",
-    x: 270, y: 200,
-    size: 70,
-    color: 'black',
-    z: 50
-  )
+    Circle.new(
+      x:120 , y: 430,
+      radius: 10,
+      sectors: 8,
+      color: 'black',
+      z: 10
+    )
+    Text.new(
+      "You lost",
+      x: 270, y: 200,
+      size: 70,
+      color: 'black',
+      z: 50
+    )
 
-  Text.new(
-    "You survived #{@wave} waves",
-    x: 160, y: 260,
-    size: 50,
-    color: 'black',
-    z: 50
-  )
+    Text.new(
+      "You survived #{@wave} waves",
+      x: 160, y: 260,
+      size: 50,
+      color: 'black',
+      z: 50
+    )
   end
 end
 
+
 #Beskrivning: Ritar upp en "Heads up display" för spelaren som visar viktig information och där hen kan välja ammonutions typ
-#Variabler:
+#parameter:
 #coin - int : represeterar hur mycket pengar spelaren har
 #ammo - int : representerar vilken typ av ammonution som är vald
 class Display
@@ -303,8 +309,9 @@ class Display
   end
 end
 
+
 #Beskrivning: Skapar en fiendeklass för fiender som är snabba
-#Variabler:
+#parameter:
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 #health - int : fiendens hälsovärde
@@ -334,8 +341,9 @@ class FastEnemy
   end
 end
 
+
 #Beskrivning: Skapar en fiendeklass för fiender som är större och har mycket hälsa
-#Variabler:
+#parameter:
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 #health - int : fiendens hälsovärde
@@ -376,8 +384,9 @@ class  VeryBigEnemy
   end
 end
 
+
 #Beskrivning: Skapar en fiendeklass för fiender som är större och har ganska mycket hälsa
-#Variabler:
+#parameter:
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 #health - int : fiendens hälsovärde
@@ -417,8 +426,9 @@ class BigEnemy
 
 end
 
+
 #Beskrivning: Skapar en fiendeklass för vanliga fiender
-#Variabler:
+#parameter:
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 #health - int : fiendens hälsovärde
@@ -449,16 +459,17 @@ class Enemy
 
 end
 
+
 #Beskrivning: Skapar det vanliga skottet, alltså kanonkulan, som oftats kommer användas
 #parameter:
-#power - float: ett vräde som representera hur hårt/snabbt skottet ska skjutas
+#force - float: ett värde som representera hur hårt/snabbt skottet ska skjutas
 #mouse_x - int: datormusens x-värde
 #mouse_y - int: datormusens y-värde
 #start - bool: visar om spelet har börjat eller inte
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 class Player
-  attr_writer :power 
+  attr_writer :force 
   attr_writer :mouse_x 
   attr_writer :mouse_y
   attr_writer :start
@@ -467,7 +478,7 @@ class Player
   def initialize
     #skapar lokala variabler för klassen
     @start = true
-    @power = 1
+    @force = 0
     @mouse_x = 1
     @mouse_y = 1
     @start_y = 410
@@ -492,28 +503,29 @@ class Player
     if @start
       #räknar ut vinkeln skotten ska skjutas och ändrar kraften skotten skjuts med korresponderande
       @vinkel = Math.atan((@start_y- @mouse_y).to_f/(@mouse_x - @start_x)) * 57
-      @y_velocity = @power * 3 * Math.sin((-@vinkel) * Math::PI / 180.0)
+      @y_velocity = @force * 3 * Math.sin((-@vinkel) * Math::PI / 180.0)
       @start = false
     end
     if @y < 470 #Om y kordinatet är under 470 (alltså att skotten är i luften) förändras x och y kordinaten. Skottet färdas i en kaströrelse
       @y += @y_velocity
-      @x += @power * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
+      @x += @force * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
       @y_velocity += 0.06 #skottet blir påverkat av gravitationen
     end
   
   end
 end
 
+
 #Beskrivning: Skapar ett skott som studsar
 #parameter:
-#power - float: ett värde som representera hur hårt/snabbt skottet ska skjutas
+#force - float: ett värde som representera hur hårt/snabbt skottet ska skjutas
 #mouse_x - int: datormusens x-värde
 #mouse_y - int: datormusens y-värde
 #start - bool: visar om spelet har börjat eller inte
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 class Player2
-  attr_writer :value 
+  attr_writer :force  
   attr_writer :mouse_x 
   attr_writer :mouse_y
   attr_writer :start
@@ -523,7 +535,7 @@ class Player2
   def initialize
     #skapar lokala variabler för klassen
     @start = true
-    @value = 1
+    @force  = 1
     @mouse_x = 1
     @mouse_y = 1
     @start_y = 410
@@ -549,34 +561,35 @@ class Player2
     if @start
       #räknar ut vinkeln skotten ska skjutas och ändrar kraften skotten skjuts med korresponderande
       @vinkel = Math.atan((@start_y- @mouse_y).to_f/(@mouse_x - @start_x)) * 57
-      @y_velocity = @value * 3 * Math.sin((-@vinkel) * Math::PI / 180.0)
+      @y_velocity = @force  * 3 * Math.sin((-@vinkel) * Math::PI / 180.0)
       @start = false
     end
 
     if @y < 470 
       #Om y kordinatet är under 470 (alltså att skotten är i luften) förändras x och y kordinaten. Skottet färdas i en kaströrelse
       @y += @y_velocity
-      @x += @value * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
+      @x += @force  * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
       @y_velocity += 0.06 #skottet blir påverkat av gravitationen
     elsif @y_velocity.abs > 1 #Om y-värdet är över 470 och hastigheten i y-led är över 1 studsar bollen uppåt igen med 0,85% av sin tidigare kraft
       @y_velocity = -(@y_velocity * 0.85)
       @y += @y_velocity
-      @x += @value * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
+      @x += @force  * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
       @y_velocity += 0.06 #skottet blir påverkat av gravitationen
     end
   end
 end
 
+
 #Beskrivning: Skapar ett skott som rullar på marken
 #parameter:
-#power - float: ett värde som representera hur hårt/snabbt skottet ska skjutas
+#force - float: ett värde som representera hur hårt/snabbt skottet ska skjutas
 #mouse_x - int: datormusens x-värde
 #mouse_y - int: datormusens y-värde
 #start - bool: visar om spelet har börjat eller inte
 #x - int : fiendens x-position
 #y - int : fiendens y-position
 class Player3
-  attr_writer :value 
+  attr_writer :force 
   attr_writer :mouse_x 
   attr_writer :mouse_y
   attr_writer :start
@@ -586,7 +599,7 @@ class Player3
   def initialize
     #skapar lokala variabler för klassen
     @start = true
-    @value = 1
+    @force  = 1
     @mouse_x = 1
     @mouse_y = 1
     @start_y = 410
@@ -611,8 +624,8 @@ class Player3
     if @start 
       #räknar ut vinkeln skotten ska skjutas och ändrar kraften skotten skjuts med korresponderande
       @vinkel = Math.atan((@start_y- @mouse_y).to_f/(@mouse_x - @start_x)) * 57
-      @y_velocity = @value * 3 * Math.sin((-@vinkel) * Math::PI / 180.0)
-      @x_velocity = @value * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
+      @y_velocity = @force  * 3 * Math.sin((-@vinkel) * Math::PI / 180.0)
+      @x_velocity = @force  * 3 * Math.cos((-@vinkel) * Math::PI / 180.0)
       @start = false
     end
 
@@ -624,7 +637,7 @@ class Player3
 
     elsif @x < 900 && @x_velocity > 0 #När skottet är över 455 (alltså på marken) och x är mindre än 900 (alltså att den är på skärmen) glider skotten fram över marken och skatar långsamt ner 
       @x += @x_velocity 
-      @x_velocity -= 0.02
+      @x_velocity -= 0.04
     else 
     # när skotten stannat ändras y värdet till 470, vilket gör så att den inte längre kolliderar med fiender
     @y= 470
@@ -669,12 +682,14 @@ class Sight
   end
 end
 
-#Beskrivning: skapar en kraftmätare som visar med hur mycket kraft 
+
+#Beskrivning: skapar en kraftmätare som visar med hur mycket kraft som skotten kommer skjutas med
 #parameter:
-#times - float:
+#times - float: ett float värde som representerar tiden när kraftmätaren startas
 class Power_meter
   attr_writer :times
   def initialize
+    #skapar lokala variabler för klassen
     @x = 80
     @y = 370
     @time_value = 1.0
@@ -682,22 +697,26 @@ class Power_meter
   end
   def draw
 
-    @time_value =Time.now - @times
+    @time_value =Time.now - @times #tid-stratvärdet subtraheras från den aktuella tiden för att få skillnaden
     if @time_value > 3
+      #3 sätts som ett maxvärde för tids-skillnaden
       @time_value = 3
     end
-     
+    #en rektangel ritas ut där dess bredd är tidskillnaden multiplicerat med 15
     meter = Rectangle.new(
       x: @x, y: @y,
       width: @time_value * 15 , height: 5,
       z: 2
     )
+
+    #rektangelns färg ändras allteftersom tiden går. Rektangeln kommer gå från grön till röd.
     if @time_value < 1.5
     meter.color = [1 * (@time_value/1.5), 1, 0, 1]
     else 
     meter.color = [1, 1 - 1 * ((@time_value-1.5)/1.5), 0, 1]
     end
 
+    #ritar ut en yttre ram för kraftmätaren
     Rectangle.new(
       x: @x-2, y: @y-2,
       width: 49 , height: 8,
@@ -707,15 +726,20 @@ class Power_meter
   end
 end
 
-class Castle
+
+#Beskrivning: Ritar ut en rektangeln som visar slottets hälsa
+#parameter:
+#health - int: ett värde som representerar slottets hälsa
+class Health_bar
   attr_accessor :health
   def initialize
+    #skapar lokala variabler för klassen
     @x = 75
     @y = 480
     @health = 45
   end
   def draw
-    
+    #ritar en rektangel, där bredden är slottets hälsa
     meter = Rectangle.new(
       x: @x, y: @y, z: 30,
       width: @health, height: 5,
@@ -732,13 +756,19 @@ class Castle
   end
 end
 
+
+#Beskrivning: Skriver ut en text med vilken våg/nivå man är på
+#parameter:
+# wave - int: representerar vågen/nivån man är på
 class Text1
   attr_accessor :wave
   def initialize
-    @wave = "i"
+    #skapar lokala variabler för klassen
+    @wave = 1
   end
 
   def draw
+    #skriver ut texten "wave" och variablen @wave
     Text.new(
       "Wave  #{@wave}",
       x: 270, y: 200,
@@ -751,13 +781,20 @@ class Text1
 end
 
 
+#Beskrivning: skapar en tvådimensionell array av arrayer med listor av fiende-objekt och en array som korresponderar till hur många liv varje fiende har kvar
+#parameter:
+#number_of_enemys - int: värdet som bestämmer hur många arrayer av finder som ska vara i den tvådimensionella (alltså hur många fiender som kommer visas på skärmen samtidigt)
+#returns:
+#output - sträng: en tvådimensionell fyll med arrayer av fiende-objekt
+#index - sträng: en array som representerar vilket index varje fiendearray är på
 def enemyarray(number_of_enemys)
   rows = number_of_enemys
   i = 0
-  output = []
-  index = []
+  output = [] #array som kommer fyllas med arrayer av fiender
+  index = [] # array som kommer visa vilket liv de olika fiendearrayerna är på
   
   while i < rows
+    #skapar ett random nummer och lägger in en lista av olika typer av fiender beroende på nummret
     number = rand(0..5)
     if number < 3
       output << [Enemy.new, Enemy.new, Enemy.new]
@@ -769,65 +806,82 @@ def enemyarray(number_of_enemys)
       output << [VeryBigEnemy.new, VeryBigEnemy.new, VeryBigEnemy.new]
     end
     
-    index << 0
+    index << 0 #för varje array med fiender läggs en nolla in i index arrayn. denna array visar vilket "liv" (alltså vilken index) varje fiendearray är på
     i += 1
   end
- 
+  
   return [output, index]
 end
 
 #Definerar variabler
 start = false
 start_enemies = 6
+#skapar arrayer
 enemy = enemyarray(start_enemies)[0]
 index = enemyarray(start_enemies)[1]
+#skapar integers och floats
 current_enemy = 0
 level = 1
+duration = 1
+dead_enemise = 0
+ammotype = 1
+coins = 0
+start_time = Time.now
+text_time = Time.now
+#skapar objekt
 background = Background_draw.new
 deadbackground = DeadBackground_draw.new
 player = Player.new
-start_time = nil
-duration = 1
-aim = false
 sight = Sight.new
 power = Power_meter.new
-castle = Castle.new
+health_bar = Health_bar.new
 text = Text1.new
-dead_enemise = 0
+display = Display.new
+#skapar bools
+start_time = nil
+aim = false
 show_text = true
-start_time = Time.now
 dead = false
-ammotype = 1
+#Skapar tre osynliga objekt som senare används för contains? 
 am1 = Square.new(x: 10, y: 190, size:25)
 am1.color = [0, 0, 0, 0]
 am2 = Square.new(x: 10, y: 130, z: 100, size:25)
 am2.color = [0, 0, 0, 0]
 am3 = Square.new(x: 10, y: 70, z: 100, size:25)
 am3.color = [0, 0, 0, 0]
-coins = 0
-display = Display.new
-text_time = Time.now
 
-#Beskrivning:
+
+#Beskrivning: kollar om spelaren och en fiende kolliderar. Vid en kollision minskas fiendens hälsa med 1. När en fiende har 1 hälsa kvar ändras dess index, vilket skapar en ny fiende.
 #Parameter:
-# px - 
-#
+# p_x - int: spelarens x-koordinat
+# p_y - int: spelarens y-koordinat
+# e_x - int: fiendens x-koordinat
+# e_x - int: fiendens y-koordinat
+# health - int: fiendens hälsovärde
+# index - inte: ett värde som korresponderar till fiendesn index i arrayen
+#Returns:
+# index - int: fiendens nya index, och fienden har dött har indexet ökat med 1
+# helath - int: fiendens nya hälsovärde
+# coin - int: representerar hur många coins spelaren får. Kan anntingen vara 0 eller 1.
+def collision(p_x, p_y, e_x, e_y, health, index)
 
-def collision(px, py, ex, ey, health, index)
-
+  #ritar ut en ny cirkel på spelarens position
   cir = Circle.new(
-    x: px, y: pv,
+    x: p_x, y: p_y,
     radius: 15,
     sectors: 10,
     z: 10
     )
-
   cir.color = [0, 0, 0, 0]
-  xlef = ex - 10
-  xrigt = ex + 10
+
+  #skapar ny variabler, skapar x-gränsvärden
+  x_lef = e_x - 10
+  x_right = e_x + 10
   coin = 0
 
-  if cir.contains? xlef, ey or cir.contains? xrigt, ey 
+  #använder contains på det vänstar x-gränsvärdet och det högra x-gränsvärdet  och undersöker om spelaren är i kontakt med spelaren
+  if cir.contains? x_lef, e_y or cir.contains? x_right, e_y 
+    #om spelarens hälsovärde är 1 ändras index (fienden "dödas") och coinvärdet blir 1, annars tas 1 bort från fiendens hälsa
     if health == 1
       index += 1
       coin = 1
@@ -839,10 +893,13 @@ def collision(px, py, ex, ey, health, index)
   return [index, health, coin]
 end
 
+
+#När vänsterklick trycks ner:
 on :mouse_down do |event|
   
   case event.button
   when :left
+    #om clickningen sker på en av knapparna händer ingenting, annars ritas kraftmätaren ut och kraftmätarens times värde defineras som den aktiva tiden 
     if am1.contains? Window.mouse_x, Window.mouse_y or am2.contains? Window.mouse_x, Window.mouse_y or am3.contains? Window.mouse_x, Window.mouse_y 
     else
     start_time = Time.now
@@ -853,11 +910,13 @@ on :mouse_down do |event|
 
 end
 
+#När vänsterklick lyfts upp
 on :mouse_up do |event|
   mouse_xx = Window.mouse_x
   mouse_yy= Window.mouse_y
   case event.button
   when :left
+    #om klickningen skedde på någon av knapparna ändras ammotype variabeln till det korrisponderande värdet
     if am1.contains? mouse_xx, mouse_yy
       ammotype = 1
     elsif am2.contains? mouse_xx, mouse_yy
@@ -865,8 +924,10 @@ on :mouse_up do |event|
     elsif am3.contains? mouse_xx, mouse_yy
       ammotype = 3
     else
-     duration = Time.now - texttime
+     duration = Time.now - start_time
      start = true
+
+     #variablen player defineras som player-objektet som korrisponderar till det aktiva ammotype-värdet
      if ammotype == 1
      player = Player.new
      elsif ammotype == 2 && coins >= 10
@@ -877,10 +938,13 @@ on :mouse_up do |event|
       coins -= 50
      end
 
+     #3 sätts som maxvärde
      if duration > 3
       duration = 3
      end
-     player.value = duration
+
+     #spelarens variabler updateras
+     player.force = duration
      player.mouse_x = mouse_xx
      player.mouse_y = mouse_yy
      player.start = true
@@ -889,16 +953,20 @@ on :mouse_up do |event|
   end
 end
 
+#denna loop körs hela tiden
 update do
-  clear
+
+  clear # skärmen rensas
   if dead != true
+  #objektens funktioner kallas på
   background.draw
-  castle.draw
+  health_bar.draw
   display.ammo = ammotype
   display.coin = coins
   display.draw
   timcheck = (Time.now) - text_time
 
+  #de första 2.5 sekunderna va en ny våg visas text på skärmen
   if timcheck < 2.5
     text.wave = level
     text.draw
@@ -907,57 +975,68 @@ update do
   i = 0
   dead_enemise = 0
 
-  while i < enemy.length
-    if index[i] < 2
+  while i < enemy.length #denna while-loop updaterar alla fiendeobjekt
+    if index[i] < 2 #så länge den aktiva fiende-arrayens index är under 2 (alltså fienden inte är helt död)
       enemy_alive = true
+      #fienden förflyttas och ritas ut
       enemy[i][index[i]].move
       enemy[i][index[i]].draw
       index[i]
       check = 0
-   
+      
+      #spelat kollar om fienden kolliderar med spelaren
       output = collision(player.x, player.y, enemy[i][index[i]].x, enemy[i][index[i]].y, enemy[i][index[i]].health, index[i])
+      #fiendens hälsa och index värden updateras och coin-värdet ändras
       index[i] = output[0]
       enemy[i][index[i]].health = output[1]
       coins += output[2]
 
-      if enemy[i][index[i]].x < 70
-        castle.health -= enemy[i][index[i]].dmg
+      
+      if enemy[i][index[i]].x < 70 #om fienden har nått slottet
+
+        #Slottets hälsa minskas med så mycket skada den specifika fienden gör och indexet på fienden ökas med 1 (den dödas)
+        health_bar.health -= enemy[i][index[i]].dmg
         index[i] += 1
       end
 
-    else 
+    else #om fiendens index-värde är 2 eller över tas den bort från enemy-arrayen och dess index tas bort från index-arrayen
       dead_enemise += 1
       enemy.delete_at(i)
       index.delete_at(i)
       i -= 2
     end
     i += 1
+  
+  if enemy.length == 0 #om alla fiender är döda
 
-  if enemy.length == 0
-    start_enemies += 4
+    start_enemies += 4 #antalet fiender som kommer skapas på nästa våg ökas med 4 för att göra spelet svårare
+    #arrayerna rensas
     enemy.clear
     index.clear
-    texttime = (Time.now)
+
+    text_time = (Time.now)
+    #nya arrayer skapas
     enemy = enemyarray(start_enemies)[0]
     index = enemyarray(start_enemies)[1]
     level += 1
   end
-  if castle.health < 0
+
+  if health_bar.health < 0 #om slottets hälsovärde är mindre än 0 ändras variabeln dead till true, vilket får den första if-satsen i update-loopen att bli false
     dead = true
   end
   end
 
   
-  if start
+  if start #om spelet har startat kallas spelarens funktioner på
   player.move
   player.draw
   end
 
-  if aim
+  if aim #när boolen aim är sann ritas sight-objektet och power-objektet ut (spelaren siktar)
    sight.draw
    power.draw
   end
-  else
+  else #när dead = false ritas en ny backgrund ut och spelet slutar. Det skrivs då också ut en text som visar hur många vågor som spelaren klarade
     deadbackground.wave = (level - 1)
     deadbackground.draw
   end
