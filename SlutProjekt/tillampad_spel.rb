@@ -958,87 +958,89 @@ update do
 
   clear # skärmen rensas
   if dead != true
-  #objektens funktioner kallas på
-  background.draw
-  health_bar.draw
-  display.ammo = ammotype
-  display.coin = coins
-  display.draw
-  timcheck = (Time.now) - text_time
+    #objektens funktioner kallas på
+    background.draw
+    health_bar.draw
+    display.ammo = ammotype
+    display.coin = coins
+    display.draw
+    timcheck = (Time.now) - text_time
 
-  #de första 2.5 sekunderna va en ny våg visas text på skärmen
-  if timcheck < 2.5
-    text.wave = level
-    text.draw
-  end
+    #de första 2.5 sekunderna va en ny våg visas text på skärmen
+    if timcheck < 2.5
+      text.wave = level
+      text.draw
+    end
 
-  i = 0
-  dead_enemise = 0
+    i = 0
+    dead_enemise = 0
 
-  while i < enemy.length #denna while-loop updaterar alla fiendeobjekt
-    if index[i] < 2 #så länge den aktiva fiende-arrayens index är under 2 (alltså fienden inte är helt död)
-      enemy_alive = true
-      #fienden förflyttas och ritas ut
-      enemy[i][index[i]].move
-      enemy[i][index[i]].draw
-      index[i]
-      check = 0
+    while i < enemy.length #denna while-loop updaterar alla fiendeobjekt
+      if index[i] < 2 #så länge den aktiva fiende-arrayens index är under 2 (alltså fienden inte är helt död)
+
+        enemy_alive = true
+        #fienden förflyttas och ritas ut
+        enemy[i][index[i]].move
+        enemy[i][index[i]].draw
+        index[i]
+        check = 0
       
-      #spelat kollar om fienden kolliderar med spelaren
-      output = collision(player.x, player.y, enemy[i][index[i]].x, enemy[i][index[i]].y, enemy[i][index[i]].health, index[i])
-      #fiendens hälsa och index värden updateras och coin-värdet ändras
-      index[i] = output[0]
-      enemy[i][index[i]].health = output[1]
-      coins += output[2]
+        #spelat kollar om fienden kolliderar med spelaren
+        output = collision(player.x, player.y, enemy[i][index[i]].x, enemy[i][index[i]].y, enemy[i][index[i]].health, index[i])
+        #fiendens hälsa och index värden updateras och coin-värdet ändras
+        index[i] = output[0]
+        enemy[i][index[i]].health = output[1]
+        coins += output[2]
 
       
-      if enemy[i][index[i]].x < 70 #om fienden har nått slottet
+        if enemy[i][index[i]].x < 70 #om fienden har nått slottet
 
-        #Slottets hälsa minskas med så mycket skada den specifika fienden gör och indexet på fienden ökas med 1 (den dödas)
-        health_bar.health -= enemy[i][index[i]].dmg
-        index[i] += 1
+          #Slottets hälsa minskas med så mycket skada den specifika fienden gör och indexet på fienden ökas med 1 (den dödas)
+          health_bar.health -= enemy[i][index[i]].dmg
+          index[i] += 1
+        end
+
+      else #om fiendens index-värde är 2 eller över tas den bort från enemy-arrayen och dess index tas bort från index-arrayen
+        dead_enemise += 1
+        enemy.delete_at(i)
+        index.delete_at(i)
+        i -= 2
+      end
+      i += 1
+  
+      if enemy.length == 0 #om alla fiender är döda
+
+        start_enemies += 4 #antalet fiender som kommer skapas på nästa våg ökas med 4 för att göra spelet svårare
+        #arrayerna rensas
+        enemy.clear
+        index.clear
+
+        text_time = (Time.now)
+        #nya arrayer skapas
+        enemy = enemyarray(start_enemies)[0]
+        index = enemyarray(start_enemies)[1]
+        level += 1
       end
 
-    else #om fiendens index-värde är 2 eller över tas den bort från enemy-arrayen och dess index tas bort från index-arrayen
-      dead_enemise += 1
-      enemy.delete_at(i)
-      index.delete_at(i)
-      i -= 2
+      if health_bar.health < 0 #om slottets hälsovärde är mindre än 0 ändras variabeln dead till true, vilket får den första if-satsen i update-loopen att bli false
+        dead = true
+      end
     end
-    i += 1
   
-  if enemy.length == 0 #om alla fiender är döda
+    if start #om spelet har startat kallas spelarens funktioner på
+      player.move
+      player.draw
+    end
 
-    start_enemies += 4 #antalet fiender som kommer skapas på nästa våg ökas med 4 för att göra spelet svårare
-    #arrayerna rensas
-    enemy.clear
-    index.clear
-
-    text_time = (Time.now)
-    #nya arrayer skapas
-    enemy = enemyarray(start_enemies)[0]
-    index = enemyarray(start_enemies)[1]
-    level += 1
-  end
-
-  if health_bar.health < 0 #om slottets hälsovärde är mindre än 0 ändras variabeln dead till true, vilket får den första if-satsen i update-loopen att bli false
-    dead = true
-  end
-  end
-
-  
-  if start #om spelet har startat kallas spelarens funktioner på
-  player.move
-  player.draw
-  end
-
-  if aim #när boolen aim är sann ritas sight-objektet och power-objektet ut (spelaren siktar)
-   sight.draw
-   power.draw
-  end
+    if aim #när boolen aim är sann ritas sight-objektet och power-objektet ut (spelaren siktar)
+      sight.draw
+      power.draw
+    end
   else #när dead = false ritas en ny backgrund ut och spelet slutar. Det skrivs då också ut en text som visar hur många vågor som spelaren klarade
+    
     deadbackground.wave = (level - 1)
     deadbackground.draw
   end
+
 end
 show
